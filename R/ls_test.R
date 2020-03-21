@@ -7,14 +7,15 @@
 #' a model
 #' @param contrast
 #' variable used for least square mean estimates and contrasts.
-#' @param control
-#' factor level used as the control value for contrasts
+#' @param comp
+#' vector containing the two factor levels for use in the power calculations
 #' @param sig.level
 #' signficance level used in power calculations
 #' @param power
 #' power used in power calculations
 #'
 #'
+
 #'
 #' @return
 #' A list consisting of the following:
@@ -30,21 +31,28 @@
 #'
 #' @examples
 ls_test <-
-  function(model, contrast, control, sig.level = .05, power = .9) {
+  function(model, contrast, comp, sig.level = .05, power = .9) {
     sigma <- summary(model)$sigma
     emm <- emmeans::emmeans(
       model,
       weights = "prop",
-      specs = as.formula(paste0("trt.vs.ctrl ~ ", contrast)),
-      ref = control,
+      specs = stats::as.formula(paste0("pairwise ~ ", contrast)),
+      # specs = stats::as.formula(paste0("trt.vs.ctrl ~ ", contrast)),
+      # ref = control,
       adjust = "None"
     )
-    effect_size = summary(emm)$contrasts[1, ]$estimate
-    power_res <- power.t.test(
+    emm2 <- emmeans::emmeans(
+      model,
+      weights = "prop",
+      specs = stats::as.formula(paste0("pairwise ~ ", contrast)),
+      at = eval(parse(text = paste0("list(", contrast," = comp)")))
+    )
+    effect_size = summary(emm2)$contrasts$estimate
+    power_res <- stats::power.t.test(
       delta = effect_size,
       sd = sigma,
-      sig.level = sig.level,
-      power = power
+      sig.level = .05,
+      power = .9
     )
     results = list("estimates" = summary(model),
                    "ls_means" = emm$emmeans,

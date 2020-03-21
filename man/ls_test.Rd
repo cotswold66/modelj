@@ -4,14 +4,14 @@
 \alias{ls_test}
 \title{ls_test}
 \usage{
-ls_test(model, contrast, control, sig.level = 0.05, power = 0.9)
+ls_test(model, contrast, comp, sig.level = 0.05, power = 0.9)
 }
 \arguments{
 \item{model}{a model}
 
 \item{contrast}{variable used for least square mean estimates and contrasts.}
 
-\item{control}{factor level used as the control value for contrasts}
+\item{comp}{vector containing the two factor levels for use in the power calculations}
 
 \item{sig.level}{signficance level used in power calculations}
 
