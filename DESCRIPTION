@@ -8,6 +8,6 @@ Authors@R:
            email = "john@lordsonline.org",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: Contains various model helper functions 
-License: What license it uses
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
