@@ -9,7 +9,7 @@ ls_test(model, contrast, comp, sig.level = 0.05, power = 0.9)
 \arguments{
 \item{model}{a model}
 
-\item{contrast}{variable used for least square mean estimates and contrasts.}
+\item{contrast}{factor used for least square mean estimates and contrasts.}
 
 \item{comp}{vector containing the two factor levels for use in the power calculations}
 

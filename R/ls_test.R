@@ -6,7 +6,7 @@
 #' @param model
 #' a model
 #' @param contrast
-#' variable used for least square mean estimates and contrasts.
+#' factor used for least square mean estimates and contrasts.
 #' @param comp
 #' vector containing the two factor levels for use in the power calculations
 #' @param sig.level
@@ -37,8 +37,6 @@ ls_test <-
       model,
       weights = "prop",
       specs = stats::as.formula(paste0("pairwise ~ ", contrast)),
-      # specs = stats::as.formula(paste0("trt.vs.ctrl ~ ", contrast)),
-      # ref = control,
       adjust = "None"
     )
     emm2 <- emmeans::emmeans(
