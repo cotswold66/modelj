@@ -32,6 +32,9 @@
 #' @examples
 ls_test <-
   function(model, contrast, comp, sig.level = .05, power = .9) {
+    if(!is.factor(eval(parse(text = paste0("model$model$", contrast))))){
+      stop("Contrast needs to be a factor!")
+    }
     sigma <- summary(model)$sigma
     emm <- emmeans::emmeans(
       model,
