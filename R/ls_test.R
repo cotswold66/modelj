@@ -52,8 +52,8 @@ ls_test <-
     power_res <- stats::power.t.test(
       delta = effect_size,
       sd = sigma,
-      sig.level = .05,
-      power = .9
+      sig.level = sig.level,
+      power = power
     )
     results = list("estimates" = summary(model),
                    "ls_means" = emm$emmeans,
