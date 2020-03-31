@@ -69,7 +69,7 @@ ls_test <-
     )
     contrasts <- dplyr::select(
       contrasts,
-      contrast, l.contr = C1, r_contr = C2, delta = estimate, SE, df,
+      contrast, l.contr = C1, r.contr = C2, delta = estimate, SE, df,
       t.ratio, p.value, sig.level, power,
       sigma, N
     )
