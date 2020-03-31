@@ -6,16 +6,14 @@
 #' @param model
 #' a model
 #' @param contrast
-#' factor used for least square mean estimates and contrasts.
+#' vector used for least square mean estimates and contrasts.
 #' @param comp
-#' vector containing the two factor levels for use in the power calculations
+#' string containing the two levels for use in the power calculations
 #' @param sig.level
 #' signficance level used in power calculations
 #' @param power
 #' power used in power calculations
 #'
-#'
-
 #'
 #' @return
 #' A list consisting of the following:
@@ -25,40 +23,63 @@
 #' weighting}
 #' \item{contrasts}{pair-wise contrast table (emmGrid object) against control
 #' using no multiplicity correction}
-#' \item{power}{power.t.test result}
+#' \item{summary}{summary table of contrasts and power calculations}
 #' }
 #' @export
 #'
 #' @examples
 ls_test <-
-  function(model, contrast, comp, sig.level = .05, power = .9) {
-    if(!is.factor(eval(parse(text = paste0("model$model$", contrast))))){
-      stop("Contrast needs to be a factor!")
+  function(model, contrast, comp = NULL, sig.level = .05, power = .9) {
+    contrast <- rlang::enexpr(contrast)
+    mod_contrast <- rlang::eval_tidy(contrast, model$model)
+    if(!is.factor(mod_contrast)){
+      mod_contrast <- as.factor(mod_contrast)
     }
     sigma <- summary(model)$sigma
+    specs <- rlang::eval_tidy(rlang::expr(`~`(pairwise, !!contrast)))
     emm <- emmeans::emmeans(
       model,
       weights = "prop",
-      specs = stats::as.formula(paste0("pairwise ~ ", contrast)),
+      specs = specs,
       adjust = "None"
     )
-    emm2 <- emmeans::emmeans(
-      model,
-      weights = "prop",
-      specs = stats::as.formula(paste0("pairwise ~ ", contrast)),
-      at = eval(parse(text = paste0("list(", contrast," = comp)")))
+    em1 <- tidyr::as_tibble(summary(emm$emmeans))
+    em1_contrast <- rlang::eval_tidy(contrast, em1)
+    contrasts <- summary(emm)$contrasts
+    contrasts <- dplyr::mutate(
+      contrasts,
+      pwr = purrr::map(
+        contrasts$estimate,
+        ~ power.t.test(
+          delta = .x,
+          sd = sigma,
+          sig.level = sig.level,
+          power = power
+        )
+      ),
+      sig.level = purrr::map_dbl(pwr, "sig.level"),
+      power = purrr::map_dbl(pwr, "power"),
+      power = scales::percent(power),
+      sigma = purrr::map_dbl(pwr, "sd"),
+      N = ceiling(purrr::map_dbl(pwr, "n")) * 2,
+      C1 = stringr::str_split(contrast, " - ", simplify = TRUE)[,1],
+      C1 = purrr::map_dbl(C1, ~ em1$emmean[em1_contrast %in% .x]),
+      C2 = stringr::str_split(contrast, " - ", simplify = TRUE)[,2],
+      C2 = purrr::map_dbl(C2, ~ em1$emmean[em1_contrast %in% .x]),
     )
-    effect_size = summary(emm2)$contrasts$estimate
-    power_res <- stats::power.t.test(
-      delta = effect_size,
-      sd = sigma,
-      sig.level = sig.level,
-      power = power
+    contrasts <- dplyr::select(
+      contrasts,
+      contrast, l.contr = C1, r_contr = C2, delta = estimate, SE, df,
+      t.ratio, p.value, sig.level, power,
+      sigma, N
     )
+    if (!is.null(comp)){
+      contrasts <- dplyr::filter(contrasts, grepl(comp, contrast))
+    }
     results = list("estimates" = summary(model),
                    "ls_means" = emm$emmeans,
                    "contrasts" = emm$contrasts,
-                   "power" = power_res
-                   )
+                   "summary" = contrasts
+    )
     return(results)
   }

@@ -14,4 +14,10 @@ LazyData: true
 RoxygenNote: 7.0.2
 Imports: 
     emmeans,
-    stats
+    stats,
+    rlang,
+    tidyr,
+    dplyr,
+    purrr,
+    scales,
+    stringr
