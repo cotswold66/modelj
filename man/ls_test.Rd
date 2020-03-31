@@ -4,14 +4,14 @@
 \alias{ls_test}
 \title{ls_test}
 \usage{
-ls_test(model, contrast, comp, sig.level = 0.05, power = 0.9)
+ls_test(model, contrast, comp = NULL, sig.level = 0.05, power = 0.9)
 }
 \arguments{
 \item{model}{a model}
 
-\item{contrast}{factor used for least square mean estimates and contrasts.}
+\item{contrast}{vector used for least square mean estimates and contrasts.}
 
-\item{comp}{vector containing the two factor levels for use in the power calculations}
+\item{comp}{string containing the two levels for use in the power calculations}
 
 \item{sig.level}{signficance level used in power calculations}
 
@@ -25,7 +25,7 @@ A list consisting of the following:
 weighting}
 \item{contrasts}{pair-wise contrast table (emmGrid object) against control
 using no multiplicity correction}
-\item{power}{power.t.test result}
+\item{summary}{summary table of contrasts and power calculations}
 }
 }
 \description{
