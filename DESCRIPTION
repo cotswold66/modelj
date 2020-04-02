@@ -20,4 +20,6 @@ Imports:
     dplyr,
     purrr,
     scales,
-    stringr
+    stringr,
+    knitr,
+    kableExtra

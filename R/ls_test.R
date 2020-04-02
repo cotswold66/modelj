@@ -81,5 +81,6 @@ ls_test <-
                    "contrasts" = emm$contrasts,
                    "summary" = contrasts
     )
+    results <- structure(results, class = "modelj")
     return(results)
   }
