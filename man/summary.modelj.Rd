@@ -4,12 +4,10 @@
 \alias{summary.modelj}
 \title{Method for printing summary table}
 \usage{
-\method{summary}{modelj}(x, ...)
+\method{summary}{modelj}(object, ...)
 }
 \arguments{
-\item{x}{modelj object}
-
-\item{...}{}
+\item{object}{modelj object}
 }
 \value{
 
