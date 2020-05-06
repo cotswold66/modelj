@@ -4,10 +4,12 @@
 \alias{summary.modelj}
 \title{Method for printing summary table}
 \usage{
-\method{summary}{modelj}(object, ...)
+\method{summary}{modelj}(object, caption = NULL)
 }
 \arguments{
 \item{object}{modelj object}
+
+\item{caption}{string containing table caption}
 }
 \value{
 
